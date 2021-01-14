@@ -57,13 +57,13 @@ def write_info_to_file(file_name, raw_info):
 
         for item in encoded_dic:
             file.write(item['title'])
-            file.write("\n".encode('ascii', 'ignore'))
+            file.write("\n".encode('utf-8', 'ignore'))
             file.write(item['link'])
-            file.write("\n".encode('ascii', 'ignore'))
+            file.write("\n".encode('utf-8', 'ignore'))
             file.write(item['price'])
-            file.write("\n".encode('ascii', 'ignore'))
-            file.write("\n".encode('ascii', 'ignore'))
-            file.write("\n".encode('ascii', 'ignore'))
+            file.write("\n".encode('utf-8', 'ignore'))
+            file.write("\n".encode('utf-8', 'ignore'))
+            file.write("\n".encode('utf-8', 'ignore'))
 
 
 def get_next_link(link, page_num=0):
