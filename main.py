@@ -75,9 +75,12 @@ def get_next_link(link, page_num=0):
 
 
 my_link = r"https://www.emag.bg/slushalki-kompiutyr/filter/tip-f6328,gaming-v23004"
+text_file_name = "test.txt" 
 
 number_of_pages = int(input('Pages: '))
 
 for number in range(number_of_pages + 1):
     products_collected = get_items_form_emag(get_next_link(my_link, number))
-    write_info_to_file('test.txt', products_collected)
+    write_info_to_file(text_file_name, products_collected)
+    
+print(f"The data from the site was saved on a text file: {text_file_name}")
