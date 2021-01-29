@@ -81,3 +81,5 @@ number_of_pages = int(input('Pages: '))
 for number in range(number_of_pages + 1):
     products_collected = get_items_form_emag(get_next_link(my_link, number))
     write_info_to_file('test.txt', products_collected)
+    
+    
