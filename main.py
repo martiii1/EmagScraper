@@ -37,7 +37,7 @@ def get_items_form_emag(link):
     return all_products
 
 
-def encode_dictionary(item_dict):
+def encode_dictionary_item(item_dict):
     try:
         for item in item_dict:
             item['title'] = item['title'].encode('utf-8', 'ignore')
@@ -50,7 +50,7 @@ def encode_dictionary(item_dict):
 
 def write_info_to_file(file_name, raw_info):
     with open(file_name, 'ab') as file:
-        encoded_dic = encode_dictionary(raw_info)
+        encoded_dic = encode_dictionary_item(raw_info)
 
         if encoded_dic is None:
             return
@@ -81,5 +81,3 @@ number_of_pages = int(input('Pages: '))
 for number in range(number_of_pages + 1):
     products_collected = get_items_form_emag(get_next_link(my_link, number))
     write_info_to_file('test.txt', products_collected)
-    
-    
