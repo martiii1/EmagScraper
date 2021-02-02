@@ -88,10 +88,26 @@ def get_next_link(link, page_num=0):
     return link
 
 
+def input_positive_int():
+    """ Returns only a positive integer. Returns only if the user inputs a positive integer."""
+    while True:
+        try:
+            user_number = int(input('Pages: '))
+
+            if user_number <= 0:
+                raise ValueError("The given number must be a positive integer")
+        except ValueError as err:
+            print(f"Please enter a valid whole number larger than 0! ({err})")
+            pass
+        else:
+            break
+
+    return user_number
+
 my_link = r"https://www.emag.bg/slushalki-kompiutyr/filter/tip-f6328,gaming-v23004"
 text_file_name = "testNew.txt"
 
-number_of_pages = int(input('Pages: '))
+number_of_pages = input_positive_int()
 
 for number in range(number_of_pages + 1):
     products_collected = get_items_form_emag(get_next_link(my_link, number))
