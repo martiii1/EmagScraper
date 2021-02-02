@@ -3,6 +3,23 @@ from bs4 import BeautifulSoup
 import re
 
 
+class ProductInfo:
+    def __init__(self):
+        self.price = 0.0
+        self.link = ""
+        self.description = ""
+
+    def encode_product_info_uft8(self):
+        """ Returns a new object with all parameters encoded in UTF-8. """
+
+        encoded_product = ProductInfo()
+
+        encoded_product.description = self.description.encode('utf-8', 'ignore')
+        encoded_product.link = self.link.encode('utf-8', 'ignore')
+        encoded_product.price = str(self.price).encode('utf-8', 'ignore')
+        return encoded_product
+
+
 def leave_only_numbers(text):
     regex = r"\d"
 
@@ -24,43 +41,40 @@ def get_items_form_emag(link):
     for product in items:
 
         try:
-            info = product.select('.card-section-mid')
-            price = leave_only_numbers(product.select('.product-new-price')[0].getText()) / 100
-            link = info[0].select('a[href^="https"]')[0].get('href', None)
-            description = info[0].select('a')[0].get('title', None)
+            current_product = ProductInfo()
 
-            all_products.append({'title': description, 'link': link, 'price': price})
+            info = product.select('.card-section-mid')
+
+            # Price = numbers / 100 because the number is the price and the last 2 digits are 'Stotinki'
+            current_product.price = leave_only_numbers(product.select('.product-new-price')[0].getText()) / 100
+
+            # Gets the link to the page of the current product
+            current_product.link = info[0].select('a[href^="https"]')[0].get('href', None)
+
+            # Gets the basic card description of the current product
+            current_product.description = info[0].select('a')[0].get('title', None)
+
+            # Adds the current product to the list of all products as a dict
+            all_products.append(current_product)
         except IndexError:
-            print("All data fetched!")
+            # print("End of page!")
             break
 
     return all_products
 
 
-def encode_dictionary_data(item_dict):
-    try:
-        for item in item_dict:
-            item['title'] = item['title'].encode('utf-8', 'ignore')
-            item['link'] = item['link'].encode('utf-8', 'ignore')
-            item['price'] = str(item['price']).encode('utf-8', 'ignore')
-        return item_dict
-    except:
-        return None
-
-
-def write_info_to_file(file_name, raw_info):
+def write_info_to_file(file_name, raw_data_list):
     with open(file_name, 'ab') as file:
-        encoded_dic = encode_dictionary_data(raw_info)
+        for item in raw_data_list:
+            encoded_item = item.encode_product_info_uft8()
 
-        if encoded_dic is None:
-            return
+            file.write(encoded_item.description)
+            file.write("\n".encode('utf-8', 'ignore'))
 
-        for item in encoded_dic:
-            file.write(item['title'])
+            file.write(encoded_item.link)
             file.write("\n".encode('utf-8', 'ignore'))
-            file.write(item['link'])
-            file.write("\n".encode('utf-8', 'ignore'))
-            file.write(item['price'])
+
+            file.write(encoded_item.price)
             file.write("\n".encode('utf-8', 'ignore'))
             file.write("\n".encode('utf-8', 'ignore'))
             file.write("\n".encode('utf-8', 'ignore'))
@@ -75,12 +89,12 @@ def get_next_link(link, page_num=0):
 
 
 my_link = r"https://www.emag.bg/slushalki-kompiutyr/filter/tip-f6328,gaming-v23004"
-text_file_name = "test.txt" 
+text_file_name = "testNew.txt"
 
 number_of_pages = int(input('Pages: '))
 
 for number in range(number_of_pages + 1):
     products_collected = get_items_form_emag(get_next_link(my_link, number))
     write_info_to_file(text_file_name, products_collected)
-    
+
 print(f"The data from the site was saved on a text file: {text_file_name}")
