@@ -31,7 +31,7 @@ def get_items_form_emag(link):
 
             all_products.append({'title': description, 'link': link, 'price': price})
         except IndexError:
-            print("All data fetched!")
+            #print("End of page!")
             break
 
     return all_products
