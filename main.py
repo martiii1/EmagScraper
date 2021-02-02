@@ -104,6 +104,7 @@ def input_positive_int():
 
     return user_number
 
+
 my_link = r"https://www.emag.bg/slushalki-kompiutyr/filter/tip-f6328,gaming-v23004"
 text_file_name = "testNew.txt"
 
