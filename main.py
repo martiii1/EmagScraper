@@ -10,10 +10,14 @@ class ProductInfo:
         self.description = ""
 
     def encode_product_info_uft8(self):
-        self.description = self.description.encode('utf-8', 'ignore')
-        self.link = self.link.encode('utf-8', 'ignore')
-        self.price = str(self.price).encode('utf-8', 'ignore')
-        return self
+        """ Returns a new object with all parameters encoded in UTF-8. """
+
+        encoded_product = ProductInfo()
+
+        encoded_product.description = self.description.encode('utf-8', 'ignore')
+        encoded_product.link = self.link.encode('utf-8', 'ignore')
+        encoded_product.price = str(self.price).encode('utf-8', 'ignore')
+        return encoded_product
 
 
 def leave_only_numbers(text):
@@ -59,30 +63,18 @@ def get_items_form_emag(link):
     return all_products
 
 
-def encode_dictionary_data(item_dict):
-    try:
-        for item in item_dict:
-            item['title'] = item['title'].encode('utf-8', 'ignore')
-            item['link'] = item['link'].encode('utf-8', 'ignore')
-            item['price'] = str(item['price']).encode('utf-8', 'ignore')
-        return item_dict
-    except:
-        return None
-
-
-def write_info_to_file(file_name, raw_info):
+def write_info_to_file(file_name, raw_data_list):
     with open(file_name, 'ab') as file:
-        encoded_data = encode_dictionary_data(raw_info)
+        for item in raw_data_list:
+            encoded_item = item.encode_product_info_uft8()
 
-        if encoded_data is None:
-            return
+            file.write(encoded_item.description)
+            file.write("\n".encode('utf-8', 'ignore'))
 
-        for item in encoded_data:
-            file.write(item['title'])
+            file.write(encoded_item.link)
             file.write("\n".encode('utf-8', 'ignore'))
-            file.write(item['link'])
-            file.write("\n".encode('utf-8', 'ignore'))
-            file.write(item['price'])
+
+            file.write(encoded_item.price)
             file.write("\n".encode('utf-8', 'ignore'))
             file.write("\n".encode('utf-8', 'ignore'))
             file.write("\n".encode('utf-8', 'ignore'))
